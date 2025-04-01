@@ -4,6 +4,7 @@ from flask import json
 from datetime import datetime
 from urllib.request import urlopen
 import sqlite3
+import requests  
                                                                                                                                        
 app = Flask(__name__) #commit                                                                                                                 
                                                                                                                                        
@@ -38,7 +39,7 @@ def mongraphique():
 def histogramme():
     return render_template("histogramme.html")
 
-import requests  # Ajout de requests pour appeler l'API GitHub
+
 
 @app.route('/commits/')
 def commits():
