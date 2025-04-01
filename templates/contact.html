@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Contactez-moi</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+      }
+      h2 {
+        color: #007bff;
+      }
+      input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Contactez-moi 📩</h2>
+      <form>
+        <input type="text" placeholder="Votre Nom" required><br>
+        <input type="text" placeholder="Votre Prénom" required><br>
+        <textarea placeholder="Votre message..." rows="4" required></textarea><br>
+        <button type="submit">Envoyer</button>
+      </form>
+    </div>
+  </body>
+</html>
