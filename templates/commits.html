@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commits Histogramme</title>
+    <title>Graphique des Commits</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script>
-        google.charts.load("current", {packages:["corechart"]});
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
             fetch('/commits/')
                 .then(response => response.json())
                 .then(data => {
-                    var chartData = [['Minute', 'Nombre de Commits']];
-                    
+                    var chartData = [['Minute', 'Commits']];
                     data.forEach(entry => {
                         chartData.push([entry.minute, entry.commit_count]);
                     });
@@ -22,23 +21,21 @@
                     var dataTable = google.visualization.arrayToDataTable(chartData);
 
                     var options = {
-                        title: 'Nombre de Commits par Minute',
-                        legend: { position: 'none' },
-                        hAxis: { title: 'Minute' },
-                        vAxis: { title: 'Nombre de Commits' },
-                        chartArea: { width: '80%', height: '70%' },
-                        bar: { groupWidth: "90%" },
-                        colors: ['#4285F4']
+                        title: 'Nombre de commits par minute',
+                        hAxis: {title: 'Minute'},
+                        vAxis: {title: 'Nombre de commits'},
+                        bars: 'vertical'
                     };
 
-                    var chart = new google.visualization.ColumnChart(document.getElementById("chart_div"));
+                    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
                     chart.draw(dataTable, options);
-                });
+                })
+                .catch(error => console.error('Erreur de chargement des données:', error));
         }
     </script>
 </head>
 <body>
-    <h2>Histogramme des Commits</h2>
-    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+    <h1>Graphique des Commits</h1>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
 </body>
 </html>
