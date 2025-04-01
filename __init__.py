@@ -9,7 +9,7 @@ app = Flask(__name__) #commit
                                                                                                                                        
 @app.route('/')
 def hello_world():
-    return render_template("contact.html")
+    return render_template('hello.html')
 
 @app.route("/contact/")
 def MaPremiereAPI():
