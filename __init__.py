@@ -9,7 +9,7 @@ app = Flask(__name__) #commit
                                                                                                                                        
 @app.route('/')
 def hello_world():
-    return render_template('hello.html')
+    return render_template('contact.html')
 
 @app.route("/contact/")
 def MaPremiereAPI():
@@ -34,10 +34,6 @@ def mongraphique():
 @app.route("/histogramme/")
 def histogramme():
     return render_template("histogramme.html")
-
-@app.route("/contact/")
-def contact():
-    return render_template("contact.html")
 
 if __name__ == "__main__":
   app.run(debug=True)
