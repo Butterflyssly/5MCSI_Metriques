@@ -38,33 +38,37 @@ def histogramme():
 
 @app.route('/commits/')
 def commits():
-    url = 'https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits'
-    response = requests.get(url)
-    
-    if response.status_code != 200:
-        return jsonify({'error': 'Problème avec l\'API GitHub', 'status_code': response.status_code}), 500
+    try:
+        url = 'https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits'
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url, headers=headers)
 
-    commits_data = response.json()
+        if response.status_code != 200:
+            return jsonify({'error': 'Problème avec l\'API GitHub', 'status_code': response.status_code}), 500
 
-    # Préparation des données par minute
-    commit_counts = {}
-    for commit in commits_data:
-        date_str = commit['commit']['author']['date']
-        date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
-        minute = date_obj.strftime('%Y-%m-%d %H:%M')  # Format Minute : année-mois-jour heure:minute
+        commits_data = response.json()
+
         
-        if minute not in commit_counts:
-            commit_counts[minute] = 0
-        commit_counts[minute] += 1
+        if not isinstance(commits_data, list):
+            return jsonify({'error': 'Format de réponse invalide'}), 500
 
-    # Format des données pour le graphique
-    results = [{'minute': minute, 'commit_count': count} for minute, count in commit_counts.items()]
+        
+        commit_counts = {}
+        for commit in commits_data:
+            date_str = commit['commit']['author']['date']
+            date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
+            minute = date_obj.strftime('%Y-%m-%d %H:%M')
 
-    return jsonify(results=results)
+            if minute not in commit_counts:
+                commit_counts[minute] = 0
+            commit_counts[minute] += 1
 
-@app.route('/commits_graph/')
-def commits_graph():
-    return render_template("commits.html")
+        results = [{'minute': minute, 'commit_count': count} for minute, count in commit_counts.items()]
+
+        return jsonify(results=results)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
   app.run(debug=True)
