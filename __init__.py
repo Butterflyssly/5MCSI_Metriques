@@ -35,43 +35,35 @@ def mongraphique():
 def histogramme():
     return render_template("histogramme.html")
 
-import requests
-from datetime import datetime
-import matplotlib.pyplot as plt
-from io import BytesIO
-from flask import Response
-
-
 @app.route('/commits/')
 def commits():
-   
     url = 'https://api.github.com/repos/OpenRSI/5MCSI_Metriques/commits'
     response = requests.get(url)
+    
+    if response.status_code != 200:
+        return jsonify({'error': 'Problème avec l\'API GitHub', 'status_code': response.status_code}), 500
+
     commits_data = response.json()
 
-  
-    commit_minutes = []
+    # Préparation des données par minute
+    commit_counts = {}
     for commit in commits_data:
-        commit_time = commit['commit']['author']['date']
-        commit_datetime = datetime.strptime(commit_time, '%Y-%m-%dT%H:%M:%SZ')
-        commit_minutes.append(commit_datetime.minute)
+        date_str = commit['commit']['author']['date']
+        date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%SZ')
+        minute = date_obj.strftime('%Y-%m-%d %H:%M')  # Format Minute : année-mois-jour heure:minute
+        
+        if minute not in commit_counts:
+            commit_counts[minute] = 0
+        commit_counts[minute] += 1
 
-   
-    minute_counts = [commit_minutes.count(minute) for minute in range(60)]
+    # Format des données pour le graphique
+    results = [{'minute': minute, 'commit_count': count} for minute, count in commit_counts.items()]
 
-    
-    plt.figure(figsize=(10, 5))
-    plt.bar(range(60), minute_counts, color='blue')
-    plt.xlabel('Minute')
-    plt.ylabel('Nombre de commits')
-    plt.title('Nombre de commits par minute')
+    return jsonify(results=results)
 
-   
-    img = BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-
-    return Response(img, mimetype='image/png')
+@app.route('/commits_graph/')
+def commits_graph():
+    return render_template("commits.html")
 
 if __name__ == "__main__":
   app.run(debug=True)
